@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:p="http://www.springframework.org/schema/p" xmlns:c="http://www.springframework.org/schema/c"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+    <beans >
+
+        <context:property-placeholder location="classpath:jdbc.properties"/>
+        <context:component-scan base-package="com.brianyi"/>
+        <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource">
+            <property name="username" value="${jdbc.user}"/>
+            <property name="url" value="${jdbc.url}"/>
+            <property name="password" value="${jdbc.password}"/>
+            <property name="driver" ref="driverClass"/>
+        </bean>
+
+        <bean id="driverClass" class="com.mysql.jdbc.Driver"/>
+        <bean id="userDao" class="com.brianyi.UserDao"/>
+
+        <bean id="user" class="com.brianyi.entity.User" init-method="init" destroy-method="destory" scope="prototype">
+            <property name="name" value="ahao"/>
+            <property name="age" value="123"/>
+            <property name="gender" value="男"/>
+        </bean>
+
+        <bean id="userByConstructor" class="com.brianyi.entity.User">
+            <constructor-arg type="java.lang.String" value="ahao"/>
+            <constructor-arg index="1" value="12"/>
+            <constructor-arg name="gender" value="男"/>
+        </bean>
+<!--        使用p命名空间-->
+        <bean id="userByPNameSpace" class="com.brianyi.entity.User" p:name="ahao" p:age="23" p:gender="男" />
+<!--        使用c命名空间-->
+        <bean id="userByCNameSpace" class="com.brianyi.entity.User" c:name="ahao" c:age="23" c:gender="男"/>
+
+<!-- 复杂类型进行复制-->
+        <bean id="person" class="com.brianyi.entity.Person" p:age="20" p:names="身高:175,体重:20t" p:name="ahao" p:address-ref="address"/>
+        <bean id="address" class="com.brianyi.entity.Address" p:county="yy" p:nation="china"/>
+
+        <bean id="person2" class="com.brianyi.entity.Person" p:age="20"  p:name="ahao" p:address-ref="address">
+            <property name="names">
+                <list>
+                    <value>hao</value>
+                    <value>123</value>
+                </list>
+            </property>
+            <property name="infos">
+                <map>
+                    <entry key="first" value="1"/>
+                    <entry>
+                        <key>
+                            <value>second</value>
+                        </key>
+                        <value>2</value>
+                    </entry>
+                </map>
+            </property>
+        </bean>
+<!--        静态工厂-->
+        <bean id="personByStaticFactory" class="com.brianyi.factory.PersonStaticFactory" factory-method="getPerson"/>
+<!--        实列工厂-->
+<!--        创建实列工厂-->
+        <bean id="personFactory" class="com.brianyi.factory.PersonFactory"/>
+<!--        创建对象-->
+        <bean id="person3" factory-bean="personFactory" factory-method="getPerson" autowire="byType"/>
+<!--     增强-->
+<!--        <bean id="beanPostProcessor" class="com.brianyi.beanPostProcessor.MyBeanPostProcessor"/>-->
+
+
+    </beans>
+</beans>

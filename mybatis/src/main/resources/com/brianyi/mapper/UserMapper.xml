@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--namespace 命名空间 确保sql语句的唯一性-->
+<mapper namespace="com.brianyi.mapper.UserMapper">
+    <resultMap id="userMap" type="SysUser">
+        <id property="id" column="id"/>
+        <result property="userName" column="user_name"/>
+        <result property="userPassword" column="user_password"/>
+        <result property="userEmail" column="user_email"/>
+        <result property="userInfo" column="user_info"/>
+        <result property="headImg" column="head_img" jdbcType="BLOB"/>
+        <result property="createTime" column="creat_time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <!--id 当前sql语句的唯一id,返回的数据的类型,如果在主配置上没有配置别名映射,则要写全限类名-->
+    <select id="selectById" resultMap="userMap">
+        select *
+        from sys_user
+        where id = #{id}
+    </select>
+    <!--获取所有用户-->
+    <select id="selectAll" resultType="sysuser">
+        select id,
+               user_name,
+               user_email,
+               user_info,
+               user_password,
+               head_img,
+               create_time
+        from sys_user
+    </select>
+<!--    获取某个用户的角色-->
+    <select id="selectRolesByUserId" resultType="SysRole">
+        select r.id,r.role_name,r.enabled,r.create_by,r.create_time
+        from sys_user u
+        inner join sys_user_role sur on u.id = sur.user_id
+        inner join sys_role r on sur.role_id=r.id
+        where u.id = #{id}
+    </select>
+<!--    用户添加  自增主键回显-->
+    <insert id="insertUser" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+        insert into sys_user(user_name,user_password,user_email,user_info,head_img,create_time)
+        values(#{userName},#{userPassword},#{userEmail},#{userInfo},#{headImg,jdbcType=BLOB},#{createTime,jdbcType=TIMESTAMP})
+    </insert>
+<!--    用户添加 非只增主键回显-->
+    <insert id="getKeyBySelectKey">
+        insert into sys_user(user_name,user_password,user_email,user_info,head_img,create_time)
+        values(#{userName},#{userPassword},#{userEmail},#{userInfo},#{headImg,jdbcType=BLOB},#{createTime,jdbcType=TIMESTAMP})
+        <selectKey keyColumn="id" keyProperty="id" resultType="long" order="AFTER">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+    </insert>
+
+<!--    根据不同的输入类型进行查询-->
+    <select id="selectByUser" resultType="SysUser">
+        select id,user_email,user_name,user_info,user_password,user_email
+        from sys_user
+        <where>
+            <if test="userName != null and userName!=''">
+                and user_name = #{userName}
+            </if>
+            <if test="userEmail != null and userEmail != ''">
+                and user_email = #{userEmail}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectUserByIdList" resultType="SysUser">
+        select id,user_email,user_name,user_info,user_password,user_email
+        from sys_user
+        where id in
+        <foreach collection="ids" open="(" close=")" separator="," item="id" index="i">
+            #{id}
+        </foreach>
+    </select>
+
+
+    <update id="updateUser" >
+        update sys_user set
+        <foreach collection="setMap" item="val" index="key" separator=",">
+            ${key} = #{val}
+        </foreach>
+        where id=#{setMap.id}
+    </update>
+    <resultMap id="userRoleMap" extends="userMap" type="SysUser">
+        <result property="role.id" column="role_id"/>
+        <result property="role.roleName" column="role_name"/>
+        <result property="role.enabled" column="enabled"/>
+        <result property="role.createBy" column="create_by"/>
+        <result property="role.createTime" column="role_create_time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+    <select id="selectUserAndRoleById" resultMap="userRoleMap">
+        select u.id, u.user_name, u.user_password, u.user_email, u.user_info, u.head_img, u.create_time,
+               r.id, role_name, enabled, create_by, r.create_time role_create_time
+        from sys_user u
+        inner  join sys_user_role ur on u.id = ur.user_id
+        inner join sys_role r on ur.role_id=r.id
+        where u.id = #{id}
+    </select>
+
+
+    <resultMap id="selectRoleAndUser" type="SysUser" extends="userMap">
+        <association property="role" column="{id = role_id}"
+                     select="com.brianyi.mapper.RoleMapper.selectRoleById" fetchType="lazy"
+        />
+    </resultMap>
+    <select id="selectRoleMapSelect" resultMap="selectRoleAndUser">
+        select
+            u.id,
+            u.user_info,
+            u.user_email,
+            u.user_name,
+            u.user_password,
+            u.create_time,
+            u.head_img,
+            ur.role_id
+        from sys_user u
+        inner join sys_user_role ur on u.id = ur.user_id
+        where u.id = #{id}
+    </select>
+</mapper>

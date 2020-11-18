@@ -1,0 +1,26 @@
+{
+  "name" : "SysRolePrivilege",
+  "preName" : "",
+  "comment" : "角色权限关联表",
+  "templateGroupName" : "Default",
+  "fullColumn" : [ {
+    "name" : "roleId",
+    "comment" : null,
+    "type" : null,
+    "shortType" : null,
+    "custom" : false,
+    "ext" : { }
+  }, {
+    "name" : "privilegeId",
+    "comment" : null,
+    "type" : null,
+    "shortType" : null,
+    "custom" : false,
+    "ext" : { }
+  } ],
+  "pkColumn" : null,
+  "otherColumn" : null,
+  "savePackageName" : "com.brianyi",
+  "savePath" : "./mybatis/src/main/java/com/brianyi",
+  "saveModelName" : "mybatis01"
+}

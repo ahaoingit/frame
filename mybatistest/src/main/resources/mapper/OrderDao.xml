@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.brianyi.dao.OrderDao">
+
+    <resultMap type="com.brianyi.entity.Order" id="OrderMap">
+        <result property="oid" column="oid" jdbcType="VARCHAR"/>
+        <result property="issuer" column="Issuer" jdbcType="VARCHAR"/>
+        <result property="receiver" column="receiver" jdbcType="VARCHAR"/>
+        <result property="oStatus" column="o_status" jdbcType="INTEGER"/>
+        <result property="money" column="money" jdbcType="NUMERIC"/>
+        <result property="description" column="description" jdbcType="VARCHAR"/>
+        <result property="billingTime" column="billing_time" jdbcType="TIMESTAMP"/>
+        <result property="orderTime" column="order_time" jdbcType="TIMESTAMP"/>
+        <result property="region" column="region" jdbcType="VARCHAR"/>
+        <result property="floor" column="floor" jdbcType="VARCHAR"/>
+        <result property="door" column="door" jdbcType="VARCHAR"/>
+        <result property="type" column="type" jdbcType="VARCHAR"/>
+        <result property="limitTime" column="limit_time" jdbcType="INTEGER"/>
+        <result property="info" column="info" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="OrderMap">
+        select oid,
+               Issuer,
+               receiver,
+               o_status,
+               money,
+               description,
+               billing_time,
+               order_time,
+               region,
+               floor,
+               door,
+               type,
+               limit_time,
+               info
+        from cos.order
+        where oid = #{oid}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="OrderMap">
+        select oid,
+               Issuer,
+               receiver,
+               o_status,
+               money,
+               description,
+               billing_time,
+               order_time,
+               region,
+               floor,
+               door,
+               type,
+               limit_time,
+               info
+        from cos.order
+        limit #{offset}, #{limit}
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryAll" resultMap="OrderMap">
+        select
+        oid, Issuer, receiver, o_status, money, description, billing_time, order_time, region, floor, door, type,
+        limit_time, info
+        from cos.order
+        <where>
+            <if test="oid != null and oid != ''">
+                and oid = #{oid}
+            </if>
+            <if test="issuer != null and issuer != ''">
+                and Issuer = #{issuer}
+            </if>
+            <if test="receiver != null and receiver != ''">
+                and receiver = #{receiver}
+            </if>
+            <if test="oStatus != null">
+                and o_status = #{oStatus}
+            </if>
+            <if test="money != null">
+                and money = #{money}
+            </if>
+            <if test="description != null and description != ''">
+                and description = #{description}
+            </if>
+            <if test="billingTime != null">
+                and billing_time = #{billingTime}
+            </if>
+            <if test="orderTime != null">
+                and order_time = #{orderTime}
+            </if>
+            <if test="region != null and region != ''">
+                and region = #{region}
+            </if>
+            <if test="floor != null and floor != ''">
+                and floor = #{floor}
+            </if>
+            <if test="door != null and door != ''">
+                and door = #{door}
+            </if>
+            <if test="type != null and type != ''">
+                and type = #{type}
+            </if>
+            <if test="limitTime != null">
+                and limit_time = #{limitTime}
+            </if>
+            <if test="info != null and info != ''">
+                and info = #{info}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="oid" useGeneratedKeys="true">
+        insert into cos.order(Issuer, receiver, o_status, money, description, billing_time, order_time, region, floor,
+                              door, type, limit_time, info)
+        values (#{issuer}, #{receiver}, #{oStatus}, #{money}, #{description}, #{billingTime}, #{orderTime}, #{region},
+                #{floor}, #{door}, #{type}, #{limitTime}, #{info})
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update cos.order
+        <set>
+            <if test="issuer != null and issuer != ''">
+                Issuer = #{issuer},
+            </if>
+            <if test="receiver != null and receiver != ''">
+                receiver = #{receiver},
+            </if>
+            <if test="oStatus != null">
+                o_status = #{oStatus},
+            </if>
+            <if test="money != null">
+                money = #{money},
+            </if>
+            <if test="description != null and description != ''">
+                description = #{description},
+            </if>
+            <if test="billingTime != null">
+                billing_time = #{billingTime},
+            </if>
+            <if test="orderTime != null">
+                order_time = #{orderTime},
+            </if>
+            <if test="region != null and region != ''">
+                region = #{region},
+            </if>
+            <if test="floor != null and floor != ''">
+                floor = #{floor},
+            </if>
+            <if test="door != null and door != ''">
+                door = #{door},
+            </if>
+            <if test="type != null and type != ''">
+                type = #{type},
+            </if>
+            <if test="limitTime != null">
+                limit_time = #{limitTime},
+            </if>
+            <if test="info != null and info != ''">
+                info = #{info},
+            </if>
+        </set>
+        where oid = #{oid}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete
+        from cos.order
+        where oid = #{oid}
+    </delete>
+
+</mapper>

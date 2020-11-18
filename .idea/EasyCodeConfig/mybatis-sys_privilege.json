@@ -1,0 +1,33 @@
+{
+  "name" : "SysPrivilege",
+  "preName" : "",
+  "comment" : "权限表",
+  "templateGroupName" : "Default",
+  "fullColumn" : [ {
+    "name" : "id",
+    "comment" : null,
+    "type" : null,
+    "shortType" : null,
+    "custom" : false,
+    "ext" : { }
+  }, {
+    "name" : "privilegeName",
+    "comment" : null,
+    "type" : null,
+    "shortType" : null,
+    "custom" : false,
+    "ext" : { }
+  }, {
+    "name" : "privilegeUrl",
+    "comment" : null,
+    "type" : null,
+    "shortType" : null,
+    "custom" : false,
+    "ext" : { }
+  } ],
+  "pkColumn" : null,
+  "otherColumn" : null,
+  "savePackageName" : "com.brianyi",
+  "savePath" : "./mybatis/src/main/java/com/brianyi",
+  "saveModelName" : "mybatis01"
+}

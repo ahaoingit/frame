@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--namespace 命名空间 确保sql语句的唯一性-->
+<mapper namespace="com.brianyi.mapper.PrivilegeMapper">
+    <!--id 当前sql语句的唯一id,返回的数据的类型,如果在主配置上没有配置别名映射,则要写全限类名-->
+    <select id="selectAll" resultType="com.brianyi.mapper.PrivilegeMapper">
+
+    </select>
+</mapper>
